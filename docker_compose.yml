@@ -1,0 +1,6 @@
+services:
+  app:
+    image: my-py-img:latest
+    working_dir: /app
+    ports:
+      - "5000:5000"
