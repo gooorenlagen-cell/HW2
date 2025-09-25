@@ -1,18 +1,15 @@
-# Stage 1: Build dependencies
-FROM python:3.11-slim as builder
-
-WORKDIR /app
+FROM python:3.11-slim AS builder
+WORKDIR /install
 COPY requirements.txt .
 
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install --upgrade pip setuptools wheel \
+    && pip install --no-cache-dir --prefix=/install -r requirements.txt
 
-# Stage 2: Final stage
-FROM python:3.11-slim-buster as final
-
+FROM python:3.11-slim-buster AS final
 WORKDIR /app
 
-COPY --from=builder /usr/local/lib/python3.11/site-packages/ /usr/local/lib/python3.11/site-packages/
+COPY --from=builder /install /usr/local
 COPY app.py .
 
 EXPOSE 5000
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "5000"]
+CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "5000"]
