@@ -1,11 +1,20 @@
 pipeline{
     agent any
     stages{
-        stage("Initial"){
+        stage("Build"){
             steps{
                 script{
                     sh'''
-                    echo hello, I was pulled from github
+                    docker build -t my-py-img .
+                    '''
+                }
+            }
+        }
+        stage("Deploy"){
+            steps{
+                script{
+                    sh'''
+                    docker compose up 
                     '''
                 }
             }
