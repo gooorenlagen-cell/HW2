@@ -14,10 +14,25 @@ pipeline{
             steps{
                 script{
                     sh'''
-                    docker compose up 
+                    docker compose up -d
                     '''
                 }
             }
+        }
+        stage("Stop"){
+            steps{
+                script{
+                    sh'''
+                    docker compose down
+                    docker compose rm
+                    '''
+                }
+            }
+        }
+    }
+    post{
+        always{
+            cleanWs()
         }
     }
 }
